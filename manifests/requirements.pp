@@ -93,9 +93,13 @@ define python::requirements (
     default  => $virtualenv,
   }
 
+  $python_prefix = $python::provider ? {
+    'scl'   => "scl enable ${python::version} --",
+    default => '',
+  }
   $pip_env = $virtualenv ? {
-    'system' => 'pip',
-    default  => "${virtualenv}/bin/pip",
+    'system' => "${python_prefix} pip",
+    default  => "${python_prefix} ${virtualenv}/bin/pip",
   }
 
   $proxy_flag = $proxy ? {
