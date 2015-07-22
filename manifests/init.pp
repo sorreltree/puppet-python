@@ -84,6 +84,11 @@ class python (
     validate_re($version, concat(['system', 'pypy'], $valid_versions))
   }
 
+  $exec_prefix = $provider ? {
+    'scl'   => "scl enable ${version} -- ",
+    default => '',
+  }
+
   validate_bool($pip)
   validate_bool($dev)
   validate_bool($virtualenv)
