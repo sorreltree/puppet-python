@@ -61,13 +61,9 @@ define python::pyvenv (
 
   if $ensure == 'present' {
 
-    $virtualenv_cmd = $python::provider ? {
-      'scl'   => "scl enable ${python::version} -- pyvenv --clear",
-      'rhscl'   => "scl enable ${python::version} -- pyvenv --clear",
-      default => $version ? {
-        'system' => 'pyvenv',
-        default  => "pyvenv-${version}",
-      }
+    $virtualenv_cmd = $version ? {
+      'system' => "${python::exec_prefix}pyvenv",
+      default  => "${python::exec_prefix}pyvenv-${version}",
     }
 
     if ( $systempkgs == true ) {
@@ -93,6 +89,26 @@ define python::pyvenv (
       unless      => "grep '^[\\t ]*VIRTUAL_ENV=[\\\\'\\\"]*${venv_dir}[\\\"\\\\'][\\t ]*$' ${venv_dir}/bin/activate", #Unless activate exists and VIRTUAL_ENV is correct we re-create the virtualenv
       require     => File[$venv_dir],
       tag         => 'python-virtualenv',
+    }
+
+    # In Python 3.3 venv will decline to install pip
+    if ( $python::params::pip) {
+      $python_cmd = $python::provider ? {
+        'scl'   => "scl enable ${python::version} -- ${venv_dir}/bin/python",
+        default => $version ? {
+          'system' => "${venv_dir}/bin/python",
+          default  => "${venv_dir}/bin/python-${version}",
+        }
+      }
+      exec { "python_virtualenv_${venv_dir}_installpip":
+        command     => "curl -s https://bootstrap.pypa.io/get-pip.py | ${python_cmd}",
+        user        => $owner,
+        creates     => "${venv_dir}/bin/pip",
+        path        => '/usr/bin:/bin',
+        cwd         => '/tmp',
+        environment => $environment,
+        require     => Exec["python_virtualenv_${venv_dir}"],
+      }
     }
   } elsif $ensure == 'absent' {
     file { $venv_dir:

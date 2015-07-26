@@ -67,6 +67,7 @@ class python (
   $python_pips               = { },
   $python_virtualenvs        = { },
   $python_pyvenvs            = { },
+  $python_requirements       = { },
   $use_epel                  = $python::params::use_epel,
 ) inherits python::params{
 
@@ -81,6 +82,12 @@ class python (
     validate_re($version, concat(['python33', 'python27', 'rh-python34'], $valid_versions))
   } else {
     validate_re($version, concat(['system', 'pypy'], $valid_versions))
+  }
+
+  $exec_prefix = $provider ? {
+    'scl'   => "scl enable ${version} -- ",
+    'rhscl'   => "scl enable ${version} -- ",
+    default => '',
   }
 
   validate_bool($pip)
@@ -107,5 +114,6 @@ class python (
   create_resources('python::pip', $python_pips)
   create_resources('python::pyvenv', $python_pyvenvs)
   create_resources('python::virtualenv', $python_virtualenvs)
+  create_resources('python::requirements', $python_requirements)
 
 }
