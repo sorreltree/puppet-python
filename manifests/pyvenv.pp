@@ -72,13 +72,6 @@ define python::pyvenv (
       $system_pkgs_flag = ''
     }
 
-    file { $venv_dir:
-      ensure => directory,
-      owner  => $owner,
-      group  => $group,
-      mode   => $mode
-    }
-
     exec { "python_virtualenv_${venv_dir}":
       command     => "${virtualenv_cmd} ${system_pkgs_flag} ${venv_dir}",
       user        => $owner,
@@ -87,7 +80,6 @@ define python::pyvenv (
       cwd         => '/tmp',
       environment => $environment,
       unless      => "grep '^[\\t ]*VIRTUAL_ENV=[\\\\'\\\"]*${venv_dir}[\\\"\\\\'][\\t ]*$' ${venv_dir}/bin/activate", #Unless activate exists and VIRTUAL_ENV is correct we re-create the virtualenv
-      require     => File[$venv_dir],
       tag         => 'python-virtualenv',
     }
 
