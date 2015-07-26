@@ -105,8 +105,9 @@ class python::install {
       # rhscl is RedHat SCLs from softwarecollections.org
       $scl_package = "rhscl-${::python::version}-epel-${::operatingsystemmajrelease}-${::architecture}"
       package { $scl_package:
-        source => "https://www.softwarecollections.org/en/scls/rhscl/python33/epel-${::operatingsystemmajrelease}-${::architecture}/download/${scl_package}",
-        tag    => 'python-scl-repo',
+        source   => "https://www.softwarecollections.org/en/scls/rhscl/${::python::version}/epel-${::operatingsystemmajrelease}-${::architecture}/download/${scl_package}.noarch.rpm",
+        provider => 'rpm',
+        tag      => 'python-scl-repo',
       }
 
       package { $::python::version:
