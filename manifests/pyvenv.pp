@@ -93,12 +93,9 @@ define python::pyvenv (
 
     # In Python 3.3 venv will decline to install pip
     if ( $python::params::pip) {
-      $python_cmd = $python::provider ? {
-        'scl'   => "scl enable ${python::version} -- ${venv_dir}/bin/python",
-        default => $version ? {
-          'system' => "${venv_dir}/bin/python",
-          default  => "${venv_dir}/bin/python-${version}",
-        }
+      $python_cmd = $version ? {
+        'system' => "${::python::exec_prefix}${venv_dir}/bin/python",
+        default  => "${::python::exec_prefix}${venv_dir}/bin/python-${version}",
       }
       exec { "python_virtualenv_${venv_dir}_installpip":
         command     => "curl -s https://bootstrap.pypa.io/get-pip.py | ${python_cmd}",

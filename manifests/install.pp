@@ -118,7 +118,7 @@ class python::install {
 
       if  $pip_ensure  {
         exec { 'python-scl-pip-install':
-          command => "${python::params::exec_prefix}easy_install pip",
+          command => "${python::exec_prefix}easy_install pip",
           path    => ['/usr/bin', '/bin'],
           creates => "/opt/rh/${python::version}/root/usr/bin/pip",
         }
