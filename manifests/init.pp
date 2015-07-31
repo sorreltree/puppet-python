@@ -78,7 +78,7 @@ class python (
 
   if $provider == 'pip' {
     validate_re($version, ['^(2\.[4-7]\.\d|3\.\d\.\d)$','^system$'])
-  } elsif $provider == 'scl' {
+    } elsif ($provider == 'scl' or $provider == 'rhscl') {
     validate_re($version, concat(['python33', 'python27', 'rh-python34'], $valid_versions))
   } else {
     validate_re($version, concat(['system', 'pypy'], $valid_versions))
