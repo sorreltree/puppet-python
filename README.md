@@ -2,17 +2,6 @@
 
 Puppet module for installing and managing python, pip, virtualenvs and Gunicorn virtual hosts.
 
-**Version 1.1.x Notes**
-
-Version `1.1.x` makes several fundamental changes to the core of this module, adding some additional features, improving performance and making operations more robust in general.
-
-Please note that several changes have been made in `v1.1.x` which make manifests incompatible with the previous version.  However, modifying your manifests to suit is trivial.  Please see the notes below.
-
-Currently, the changes you need to make are as follows:
-
-* All pip definitions MUST include the owner field which specifies which user owns the virtualenv that packages will be installed in.  Adding this greatly improves performance and efficiency of this module.
-* You must explicitly specify pip => true in the python class if you want pip installed.  As such, the pip package is now independent of the dev package and so one can exist without the other.
-
 ## Installation
 
 ```shell
@@ -284,7 +273,23 @@ To use this module with Linux distributions in the Red Hat family and python dis
 from softwarecollections.org, set python::provider to 'rhscl' and python::version to the name 
 of the collection you want to use (e.g., 'python27', 'python33', or 'rh-python34').
 
+## Release Notes
+
+**Version 1.7.10 Notes**
+
+Installation of python-pip previously defaulted to `false` and was not installed. This default is now `true` and python-pip is installed. To prevent the installation of python-pip specify `pip => false` as a parameter when instantiating the `python` puppet class.
+
+**Version 1.1.x Notes**
+
+Version `1.1.x` makes several fundamental changes to the core of this module, adding some additional features, improving performance and making operations more robust in general.
+
+Please note that several changes have been made in `v1.1.x` which make manifests incompatible with the previous version.  However, modifying your manifests to suit is trivial.  Please see the notes below.
+
+Currently, the changes you need to make are as follows:
+
+* All pip definitions MUST include the owner field which specifies which user owns the virtualenv that packages will be installed in.  Adding this greatly improves performance and efficiency of this module.
+* You must explicitly specify pip => true in the python class if you want pip installed.  As such, the pip package is now independent of the dev package and so one can exist without the other.
 
 ## Authors
 
-[Sergey Stankevich](https://github.com/stankevich) | [Shiva Poudel](https://github.com/shivapoudel) | [Garrett Honeycutt](http://learnpuppet.com)
+[Sergey Stankevich](https://github.com/stankevich) | [Shiva Poudel](https://github.com/shivapoudel) | [Peter Souter](https://github.com/petems) | [Garrett Honeycutt](http://learnpuppet.com)
